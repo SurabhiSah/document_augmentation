@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Augmentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 2rem;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #343a40;
+        }
+
+        form {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin: 1rem;
+        }
+
+        input[type="file"],
+        select,
+        input[type="number"] {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            margin-top: 1.5rem;
+            padding: 0.7rem 1.5rem;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #rotate-angle-group {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Data Augmentation</h1>
+    <form id="augmentation-form" action="/generate/" method="post" enctype="multipart/form-data">
+        <label for="file">Choose Image(s)</label>
+        <input type="file" id="file" name="files" accept="image/*" multiple required>
+
+        <label for="method-select">Choose Augmentation</label>
+        <select id="method-select" name="method" required>
+            <option value="flip">Flip (Horizontal)</option>
+            <option value="scale">Scale</option>
+            <option value="translate">Translate</option>
+            <option value="noise">Add Noise</option>
+            <option value="shear">Shear</option>
+            <option value="rotate">Rotate (Custom Angle)</option>
+            <option value="all">All Augmentations</option>
+        </select>
+
+        <div id="rotate-angle-group">
+            <label for="rotate-angle">Enter Angle (in degrees)</label>
+            <input type="number" id="rotate-angle" min="0" max="360" step="1" value="90">
+        </div>
+
+        <input type="hidden" name="method" id="method">
+
+        <button type="submit">Apply Augmentation</button>
+    </form>
+
+    <script>
+        const methodSelect = document.getElementById("method-select");
+        const rotateGroup = document.getElementById("rotate-angle-group");
+        const rotateAngle = document.getElementById("rotate-angle");
+        const methodInput = document.getElementById("method");
+        const form = document.getElementById("augmentation-form");
+
+        methodSelect.addEventListener("change", () => {
+            if (methodSelect.value === "rotate") {
+                rotateGroup.style.display = "block";
+            } else {
+                rotateGroup.style.display = "none";
+            }
+        });
+
+        form.addEventListener("submit", () => {
+            if (methodSelect.value === "rotate") {
+                const angle = rotateAngle.value || 90;
+                method.value = `rotate:${angle}`;
+            } else {
+                methodInput.value = methodSelect.value;
+            }
+        });
+    </script>
+</body>
+</html>
